@@ -1,5 +1,5 @@
 import re
-from settings import FILE_NAME, IDENTIFIER, KEY_WORD_TYPE, OPERATOR
+from settings import FILE_NAME, IDENTIFIER, KEY_WORD_TYPE, OPERATOR, NUMBER
 from token import Token
 
 
@@ -8,15 +8,22 @@ class LexicalAnalyzer(object):
         'KEY_WORD': r'^(global|resource|import|end|op|var|select|if|else|select|body|extend|create|destroy|null|noop|call|send|do|int|and|proc|receive|initial|when|abort|reply|fa|co)',
         'IDENTIFIER': (),
         'NUM': {
-          'REAL': r'^(\d+\s|\s*\d+\.{1}\d+)',
+          'REAL': r'^(\d+\.{1}\d+)',
           'INT': r'^(\d+)'
         },
-        'OPERATOR': [
-            r'++',
-            r'--',
-            r':=',
-            r'++',
-        ]
+        'OPERATOR': {
+            'INCREASE' : r'^\+\+',
+            'ADD' : r'^\+',
+            'DECREASE' : r'^--',
+            'SUB' : r'^-',
+            'MUL' : r'^\*',
+            'DIV' : r'^/',
+            'ASSIGN' : r'^:=',
+            'DEFINE' : r'^:',
+            'GREATER' : r'^>',
+            'LOWER' : r'^<',
+            'MOD' : r'^%'
+        }
     }
 
     def __str__(self):
@@ -28,9 +35,15 @@ class LexicalAnalyzer(object):
         self.current_row = 1
         self.current_line = ''
 
-    def get_token(self):
-        # TODO: Apply priority rules to identify the Token and its creation.
-        pass
+    def get_token(self, token_regex, token_type):
+        token = None
+        key_word_matched = re.match(token_regex, self.current_line)
+        if key_word_matched:
+            key_word = key_word_matched.group()
+            token = Token(column=self.current_column, row=self.current_row, type=token_type, lexeme=key_word)
+            self.current_column += len(key_word)
+            self.normalize_line(key_word)
+        return token
 
     def analyze_source_code(self):
         self.source_code = open(FILE_NAME, 'r')
@@ -49,27 +62,35 @@ class LexicalAnalyzer(object):
         token = self.get_key_word()
         if not token:
             token = self.get_identifiers()
-            self.current_line = ''
+        if not token:
+            token = self.get_number()
         if not token:
             token = self.get_operator()
+        if not token:
             self.current_line = ''
         return token
 
     def get_key_word(self):  # INFO: return class Token
-        token = None
-        key_word_matched = re.match(self.TOKEN_PRIORITY['KEY_WORD'], self.current_line)
-        if key_word_matched:
-            key_word = key_word_matched.group()
-            token = Token(column=self.current_column, row=self.current_row, type=KEY_WORD_TYPE, lexeme=key_word)
-            self.current_column += len(key_word)
-            self.normalize_line(key_word)
+        token =self.get_token(self.TOKEN_PRIORITY['KEY_WORD'], KEY_WORD_TYPE)
         return token
 
     def get_identifiers(self):
         pass
 
+    def get_number(self):
+        for num_type in self.TOKEN_PRIORITY['NUM']:
+            token = self.get_token(self.TOKEN_PRIORITY['NUM'][num_type], NUMBER[num_type])
+            if token:
+                break
+        return token
+
     def get_operator(self):
-        pass
+        # pass
+        for op_type in self.TOKEN_PRIORITY['OPERATOR']:
+            token = self.get_token(self.TOKEN_PRIORITY['OPERATOR'][op_type], OPERATOR[op_type])
+            if token:
+                break
+        return token
 
     def normalize_line(self, key_word):
         self.current_line = self.current_line.lstrip(key_word)
@@ -80,4 +101,3 @@ class LexicalAnalyzer(object):
 
 if __name__ == '__main__':
     LexicalAnalyzer().analyze_source_code()
-
