@@ -24,8 +24,8 @@ class LexicalAnalyzer(object):
 
     def __init__(self):
         self.source_code = ''
-        self.current_column = 0
-        self.current_row = 0
+        self.current_column = 1
+        self.current_row = 1
         self.current_line = ''
 
     def get_token(self):
@@ -37,8 +37,8 @@ class LexicalAnalyzer(object):
         self.analyze_rows()
 
     def analyze_rows(self):
-        for number_line, line in enumerate(self.source_code):
-            self.current_column = 0
+        for number_line, line in enumerate(self.source_code, 1):
+            self.current_column = 1
             self.current_row = number_line
             self.current_line = line
             while self.current_line.strip():
@@ -62,8 +62,7 @@ class LexicalAnalyzer(object):
             key_word = key_word_matched.group()
             token = Token(column=self.current_column, row=self.current_row, type=KEY_WORD_TYPE, lexeme=key_word)
             self.current_column += len(key_word)
-            # TODO: self.normalize_line
-            self.current_line = self.current_line.lstrip(key_word)
+            self.normalize_line(key_word)
         return token
 
     def get_identifiers(self):
@@ -72,10 +71,13 @@ class LexicalAnalyzer(object):
     def get_operator(self):
         pass
 
-    def normalize_line(self): # TODO: find number of spaces and add to self.column and strip them from the self.current_line
-        pass
+    def normalize_line(self, key_word):
+        self.current_line = self.current_line.lstrip(key_word)
+        blank_space_num = len(self.current_line) - len(self.current_line.lstrip(' '))
+        self.current_column += blank_space_num
+        self.current_line = self.current_line.lstrip(' ')
 
 
 if __name__ == '__main__':
-    print(LexicalAnalyzer().analyze_source_code())
+    LexicalAnalyzer().analyze_source_code()
 
