@@ -5,8 +5,8 @@ from token import Token
 
 class LexicalAnalyzer(object):
     TOKEN_PRIORITY = {
-        'KEY_WORD': r'^(global|resource|import|end|op|var|select|if|else|select|body|extend|create|destroy|null|noop|call|send|do|int|and|proc|receive|initial|when|abort|reply|fa|co)',
-        'IDENTIFIER': (),
+        'KEY_WORD': r'^(global|resource|import|end|op|var|select|if|else|select|body|extend|create|destroy|null|noop|call|send|do|int|and|proc|receive|initial|when|abort|reply|fa|co|getarg|write|mod|stop)',
+        'IDENTIFIER': r'^([a-zA-Z]\w*)',
         'NUM': {
           'REAL': r'^(\d+\.{1}\d+)',
           'INT': r'^(\d+)'
@@ -22,7 +22,14 @@ class LexicalAnalyzer(object):
             'DEFINE' : r'^:',
             'GREATER' : r'^>',
             'LOWER' : r'^<',
-            'MOD' : r'^%'
+            'DIFFERENT': r'^\!\=',
+            'MOD' : r'^%',
+            'PAR_LEFT': r'^\(',
+            'PAR_RIGHT': r'^\)',
+            'PARC_LEFT': r'^\[',
+            'PARC_RIGHT': r'^\]',
+            'COMMA': r'^\,',
+            'POINTCOMMA': r'^\;'
         }
     }
 
@@ -54,6 +61,11 @@ class LexicalAnalyzer(object):
             self.current_column = 1
             self.current_row = number_line
             self.current_line = line
+            while self.current_line[0] == ' ':
+                self.current_line = self.current_line[1:]
+                self.current_column += 1
+            if self.current_line[0] == '#':
+                continue
             while self.current_line.strip():
                 print(self.identify_token())
 
@@ -75,7 +87,8 @@ class LexicalAnalyzer(object):
         return token
 
     def get_identifiers(self):
-        pass
+        token = self.get_token(self.TOKEN_PRIORITY['IDENTIFIER'], IDENTIFIER)
+        return token
 
     def get_number(self):
         for num_type in self.TOKEN_PRIORITY['NUM']:

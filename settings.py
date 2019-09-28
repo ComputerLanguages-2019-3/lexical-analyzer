@@ -17,6 +17,12 @@ OPERATOR = {
     'DEFINE' : 'def_op',
     'GREATER' : 'gre_op',
     'LOWER' : 'low_op',
-    'MOD' : 'mod_op'
-
+    'DIFFERENT': 'different',
+    'MOD' : 'mod_op',
+    'PAR_LEFT' : 'par_left',
+    'PAR_RIGHT' : 'par_right',
+    'PARC_LEFT': 'parc_left',
+    'PARC_RIGHT': 'parc_right',
+    'COMMA': 'comma',
+    'POINTCOMMA': 'pointcomma'
 }

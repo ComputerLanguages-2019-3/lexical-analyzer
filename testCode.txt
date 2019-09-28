@@ -11,5 +11,3 @@ body sizes
      write("N must be a multiple of PR"); stop (1)
    fi
 end
-
-
