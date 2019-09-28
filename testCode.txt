@@ -1,0 +1,13 @@
+global sizes
+   # matrix dimension, default 10
+   var N := 10
+   # number of processes, default 2
+   var PR := 2
+   # strip size
+   var S : int
+body sizes
+   getarg(1, N); getarg(2, PR); S := N/PR
+   if N mod PR != 0 ->
+     write("N must be a multiple of PR"); stop (1)
+   fi
+end
