@@ -20,4 +20,5 @@ OPERATOR = {
     'MOD' : 'mod_op',
     'PAR_LEFT' : 'par_left',
     'PAR_RIGHT' : 'par_right'
+
 }

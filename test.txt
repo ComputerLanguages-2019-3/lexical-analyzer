@@ -1,11 +1,4 @@
-resource main()
-import sizes, point1
-var pcap[N,N]: cap point1
-fa i := 1 to N, j := 1 to N ->
-pcap[i,j] := create point1(i, j)
-af
-fa i := 1 to N, j := 1 to N ->
-send pcap[i,j].compute(pcap[i,1:N], pcap[1:N,j])
-af
+end  global 3 + 3.3
+body sizes
 end
 

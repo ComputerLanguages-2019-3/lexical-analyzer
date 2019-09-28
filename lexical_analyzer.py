@@ -25,6 +25,7 @@ class LexicalAnalyzer(object):
             'MOD' : r'^%',
             'PAR_LEFT': r'^\(',
             'PAR_RIGHT': r'^\)'
+
         }
     }
 
@@ -78,6 +79,13 @@ class LexicalAnalyzer(object):
 
     def get_identifiers(self):
         token = self.get_token(self.TOKEN_PRIORITY['IDENTIFIER'], IDENTIFIER)
+        return token
+
+    def get_number(self):
+        for num_type in self.TOKEN_PRIORITY['NUM']:
+            token = self.get_token(self.TOKEN_PRIORITY['NUM'][num_type], NUMBER[num_type])
+            if token:
+                break
         return token
 
     def get_number(self):
