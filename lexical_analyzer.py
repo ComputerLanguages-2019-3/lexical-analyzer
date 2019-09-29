@@ -6,7 +6,7 @@ from token import Token
 class LexicalAnalyzer(object):
     TOKEN_PRIORITY = {
         'KEY_WORD': r'^(global|resource|import|end|op|var|select|if|else|select|body|extend|create|destroy|null|noop|call|send|do|int|and|proc|receive|initial|when|abort|reply|fa|co)',
-        'IDENTIFIER': (),
+        'IDENTIFIER': r'^([a-zA-Z]\w*)',
         'NUM': {
           'REAL': r'^(\d+\.{1}\d+)',
           'INT': r'^(\d+)'
@@ -22,7 +22,10 @@ class LexicalAnalyzer(object):
             'DEFINE' : r'^:',
             'GREATER' : r'^>',
             'LOWER' : r'^<',
-            'MOD' : r'^%'
+            'MOD' : r'^%',
+            'PAR_LEFT': r'^\(',
+            'PAR_RIGHT': r'^\)'
+
         }
     }
 
@@ -75,7 +78,15 @@ class LexicalAnalyzer(object):
         return token
 
     def get_identifiers(self):
-        pass
+        token = self.get_token(self.TOKEN_PRIORITY['IDENTIFIER'], IDENTIFIER)
+        return token
+
+    def get_number(self):
+        for num_type in self.TOKEN_PRIORITY['NUM']:
+            token = self.get_token(self.TOKEN_PRIORITY['NUM'][num_type], NUMBER[num_type])
+            if token:
+                break
+        return token
 
     def get_number(self):
         for num_type in self.TOKEN_PRIORITY['NUM']:
