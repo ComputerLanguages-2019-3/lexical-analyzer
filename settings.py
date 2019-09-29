@@ -18,10 +18,11 @@ OPERATOR = {
     'GREATER' : 'gre_op',
     'LOWER' : 'low_op',
     'MOD' : 'mod_op',
-    'PAR_LEFT' : 'par_left',
-    'PAR_RIGHT' : 'par_right',
-    'BRACKET_LEFT' : 'braqt_left',
-    'BRACKET_RIGTH' : 'braqt_right',
-    'COMMA' : 'comma',
-    'DOT' : 'dot'
+    # Random tokens
+    'PAR_LEFT' : 'tk_par_left',
+    'PAR_RIGHT' : 'tk_par_right',
+    'BRACKET_LEFT' : 'tk_braqt_left',
+    'BRACKET_RIGTH' : 'tk_braqt_right',
+    'COMMA' : 'tk_comma',
+    'DOT' : 'tk_dot'
 }

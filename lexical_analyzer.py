@@ -61,7 +61,17 @@ class LexicalAnalyzer(object):
             self.current_row = number_line
             self.current_line = line
             while self.current_line.strip():
-                print(self.identify_token())
+                token = self.identify_token()
+                self.print_token(token)
+
+    def print_token(self, token):
+        if token.type == 'id':
+            print("<%s, %s, %d, %d>" % (token.type, token.lexeme, token.row, token.column));
+        else :
+            if token.type == 'keyword':
+                print("<%s, %d, %d>" % (token.lexeme, token.row, token.column));
+            else:
+                print("<%s, %d, %d>" % (token.type, token.row, token.column));
 
     def identify_token(self):
         token = None
