@@ -1,15 +1,12 @@
-global sizes
-   # matrix dimension, default 10
-   var N := 10
-   # number of processes, default 2
-   var PR := 2
-   # strip size
-   var S : int
-body sizes
-   getarg(1, N); getarg(2, PR); S := N/PR
-   if N mod PR != 0 ->
-     write("N must be a multiple of PR"); stop (1)
-   fi
+resource main()
+   import sizes, point1
+   var pcap[N,N]: cap point1
+   # create points
+   fa i := 1 to N, j := 1 to N ->
+     pcap[i,j] := create point1(i, j)
+   af
+   # give each point capabilities for its neighbors
+   fa i := 1 to N, j := 1 to N ->
+     send pcap[i,j].compute(pcap[i,1:N], pcap[1:N,j])
+   af
 end
-
-

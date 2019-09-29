@@ -18,11 +18,16 @@ OPERATOR = {
     'GREATER' : 'gre_op',
     'LOWER' : 'low_op',
     'DIFFERENT': 'different',
+    'EQUAL' : 'equal',
     'MOD' : 'mod_op',
     'PAR_LEFT' : 'par_left',
     'PAR_RIGHT' : 'par_right',
     'PARC_LEFT': 'parc_left',
     'PARC_RIGHT': 'parc_right',
+    'SEPARATE': 'separate',
+    'EJECT': 'eject',
     'COMMA': 'comma',
-    'POINTCOMMA': 'pointcomma'
+    'POINTCOMMA': 'pointcomma',
+    'POINT': 'point',
+    'STRING': 'string'
 }

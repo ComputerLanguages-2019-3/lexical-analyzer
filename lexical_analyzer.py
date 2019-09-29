@@ -5,7 +5,7 @@ from token import Token
 
 class LexicalAnalyzer(object):
     TOKEN_PRIORITY = {
-        'KEY_WORD': r'^(global|resource|import|end|op|var|select|if|else|select|body|extend|create|destroy|null|noop|call|send|do|int|and|proc|receive|initial|when|abort|reply|fa|co|getarg|write|mod|stop)',
+        'KEY_WORD': r'^(global|resource|import|end|op|var|select|if|else|select|body|extend|create|destroy|null|noop|call|send|do|int|and|proc|receive|initial|when|abort|reply|fa|co|getarg|write|mod|stop|procedure)\s',
         'IDENTIFIER': r'^([a-zA-Z]\w*)',
         'NUM': {
           'REAL': r'^(\d+\.{1}\d+)',
@@ -23,13 +23,18 @@ class LexicalAnalyzer(object):
             'GREATER' : r'^>',
             'LOWER' : r'^<',
             'DIFFERENT': r'^\!\=',
+            'EQUAL': r'\=',
             'MOD' : r'^%',
             'PAR_LEFT': r'^\(',
             'PAR_RIGHT': r'^\)',
             'PARC_LEFT': r'^\[',
             'PARC_RIGHT': r'^\]',
+            'SEPARATE': r'^\[\]',
+            'EJECT': r'^\-\>',
             'COMMA': r'^\,',
-            'POINTCOMMA': r'^\;'
+            'POINTCOMMA': r'^\;',
+            'POINT': r'^\.',
+            'STRING': r"('.*?')|(\".*?\")"
         }
     }
 
