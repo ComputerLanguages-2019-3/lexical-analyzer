@@ -19,5 +19,9 @@ OPERATOR = {
     'LOWER' : 'low_op',
     'MOD' : 'mod_op',
     'PAR_LEFT' : 'par_left',
-    'PAR_RIGHT' : 'par_right'
+    'PAR_RIGHT' : 'par_right',
+    'BRACKET_LEFT' : 'braqt_left',
+    'BRACKET_RIGTH' : 'braqt_right',
+    'COMMA' : 'comma',
+    'DOT' : 'dot'
 }

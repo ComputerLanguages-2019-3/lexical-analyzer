@@ -24,7 +24,11 @@ class LexicalAnalyzer(object):
             'LOWER' : r'^<',
             'MOD' : r'^%',
             'PAR_LEFT': r'^\(',
-            'PAR_RIGHT': r'^\)'
+            'PAR_RIGHT': r'^\)',
+            'BRACKET_LEFT' : r'^\[',
+            'BRACKET_RIGTH' : r'^\]',
+            'COMMA' : r'^,',
+            'DOT' : r'^\.'
         }
     }
 
