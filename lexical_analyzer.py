@@ -24,8 +24,11 @@ class LexicalAnalyzer(object):
             'LOWER' : r'^<',
             'MOD' : r'^%',
             'PAR_LEFT': r'^\(',
-            'PAR_RIGHT': r'^\)'
-
+            'PAR_RIGHT': r'^\)',
+            'BRACKET_LEFT' : r'^\[',
+            'BRACKET_RIGTH' : r'^\]',
+            'COMMA' : r'^,',
+            'DOT' : r'^\.'
         }
     }
 
@@ -58,7 +61,17 @@ class LexicalAnalyzer(object):
             self.current_row = number_line
             self.current_line = line
             while self.current_line.strip():
-                print(self.identify_token())
+                token = self.identify_token()
+                self.print_token(token)
+
+    def print_token(self, token):
+        if token.type == 'id':
+            print("<%s, %s, %d, %d>" % (token.type, token.lexeme, token.row, token.column));
+        else :
+            if token.type == 'keyword':
+                print("<%s, %d, %d>" % (token.lexeme, token.row, token.column));
+            else:
+                print("<%s, %d, %d>" % (token.type, token.row, token.column));
 
     def identify_token(self):
         token = None
@@ -79,13 +92,6 @@ class LexicalAnalyzer(object):
 
     def get_identifiers(self):
         token = self.get_token(self.TOKEN_PRIORITY['IDENTIFIER'], IDENTIFIER)
-        return token
-
-    def get_number(self):
-        for num_type in self.TOKEN_PRIORITY['NUM']:
-            token = self.get_token(self.TOKEN_PRIORITY['NUM'][num_type], NUMBER[num_type])
-            if token:
-                break
         return token
 
     def get_number(self):
