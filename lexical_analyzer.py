@@ -1,5 +1,5 @@
 import re
-from settings import FILE_NAME, IDENTIFIER, KEY_WORD_TYPE, OPERATOR, NUMBER
+from settings import FILE_NAME, IDENTIFIER, KEY_WORD_TYPE, OPERATOR, NUMBER,STRING
 from token import Token
 
 
@@ -34,8 +34,9 @@ class LexicalAnalyzer(object):
             'COMMA': r'^\,',
             'POINTCOMMA': r'^\;',
             'POINT': r'^\.',
-            'STRING': r"('.*?')|(\".*?\")"
-        }
+
+        },
+        'STRING': r"('.*?')|(\".*?\")"
     }
 
     def __str__(self):
@@ -62,6 +63,7 @@ class LexicalAnalyzer(object):
         self.analyze_rows()
 
     def analyze_rows(self):
+        flag=False
         for number_line, line in enumerate(self.source_code, 1):
             self.current_column = 1
             self.current_row = number_line
@@ -72,7 +74,20 @@ class LexicalAnalyzer(object):
             if self.current_line[0] == '#':
                 continue
             while self.current_line.strip():
-                print(self.identify_token())
+                answer=self.identify_token()
+                if answer==None:
+                    print("Error léxico(linea:", self.current_row, "posicion:", self.current_column, ")")
+                    flag = True
+                    break
+                elif answer.type=="keyword":
+                    print("<"+answer.lexeme[:-1]+","+str(answer.row)+","+str(answer.column)+">")
+                elif answer.type[-2:]=="op":
+                    print("<" + answer.type + "," + str(answer.row) + "," + str(answer.column) + ">")
+                elif answer.type=="string" or answer.type=="id" or answer.type[-3:]=="num":
+                    print("<" + answer.type + "," +answer.lexeme+","+ str(answer.row) + "," + str(answer.column) + ">")
+
+            if flag:
+                break
 
     def identify_token(self):
         token = None
@@ -83,6 +98,8 @@ class LexicalAnalyzer(object):
             token = self.get_number()
         if not token:
             token = self.get_operator()
+        if not token:
+            token = self.get_string()
         if not token:
             self.current_line = ''
         return token
@@ -108,6 +125,10 @@ class LexicalAnalyzer(object):
             token = self.get_token(self.TOKEN_PRIORITY['OPERATOR'][op_type], OPERATOR[op_type])
             if token:
                 break
+        return token
+
+    def get_string(self):
+        token = self.get_token(self.TOKEN_PRIORITY['STRING'], STRING)
         return token
 
     def normalize_line(self, key_word):
