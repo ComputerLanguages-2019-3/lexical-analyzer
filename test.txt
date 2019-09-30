@@ -1,10 +1,13 @@
 resource main()
-import sizes, point1
-var pcap[N,N]: cap point1
-fa i := 1 to N, j := 1 to N ->
-pcap[i,j] := create point1(i, j)
-af
-fa i := 1 to N, j := 1 to N ->
-send pcap[i,j].compute(pcap[i,1:N], pcap[1:N,j])
-af
-end
+   import sizes, point1
+   var pcap[N,N]: cap point1
+   # create points
+   fa i := 1 to N, j := 1 to N ->
+     pcap[i,j] := create point1(i, j)
+   af
+   # give each point capabilities for its neighbors
+   fa i := 1 to N, j := 1 to N ->
+   !=$
+     send pcap[i,j].compute(pcap[i,1:N], pcap[1:N,j])
+   af
+

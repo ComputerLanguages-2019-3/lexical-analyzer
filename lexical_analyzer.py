@@ -1,11 +1,11 @@
 import re
-from settings import FILE_NAME, IDENTIFIER, KEY_WORD_TYPE, OPERATOR, NUMBER
+from settings import FILE_NAME, IDENTIFIER, KEY_WORD_TYPE, OPERATOR, NUMBER,STRING
 from token import Token
 
 
 class LexicalAnalyzer(object):
     TOKEN_PRIORITY = {
-        'KEY_WORD': r'^(global|resource|import|end|op|var|select|if|else|select|body|extend|create|destroy|null|noop|call|send|do|int|and|proc|receive|initial|when|abort|reply|fa|co)',
+        'KEY_WORD': r'^(global|resource|import|end|op|var|select|if|else|select|body|extend|create|destroy|null|noop|call|send|do|int|and|proc|receive|initial|when|abort|reply|fa|co|getarg|write|mod|stop|procedure)\s',
         'IDENTIFIER': r'^([a-zA-Z]\w*)',
         'NUM': {
           'REAL': r'^(\d+\.{1}\d+)',
@@ -22,15 +22,22 @@ class LexicalAnalyzer(object):
             'DEFINE' : r'^:',
             'GREATER' : r'^>',
             'LOWER' : r'^<',
+            'DIFFERENT': r'^\!\=',
+            'EQUAL': r'\=',
             'MOD' : r'^%',
             'PAR_LEFT': r'^\(',
             'PAR_RIGHT': r'^\)',
             'BRACKET_LEFT' : r'^\[',
             'BRACKET_RIGTH' : r'^\]',
-            'COMMA' : r'^,',
+            'SEPARATE': r'^\[\]',
+            'EJECT': r'^\-\>',
+            'COMMA': r'^\,',
+            'POINTCOMMA': r'^\;',
             'DOT' : r'^\.'
-        }
+        },
+        'STRING': r"('.*?')|(\".*?\")"
     }
+
 
     def __str__(self):
         return 'SR language Lexical Analyzer'
@@ -56,22 +63,32 @@ class LexicalAnalyzer(object):
         self.analyze_rows()
 
     def analyze_rows(self):
+        flag=False
         for number_line, line in enumerate(self.source_code, 1):
             self.current_column = 1
             self.current_row = number_line
             self.current_line = line
+            while self.current_line[0] == ' ':
+                self.current_line = self.current_line[1:]
+                self.current_column += 1
+            if self.current_line[0] == '#':
+                continue
             while self.current_line.strip():
-                token = self.identify_token()
-                self.print_token(token)
+                answer=self.identify_token()
+                if answer==None:
+                    print("Error léxico(linea:", self.current_row, "posicion:", self.current_column, ")")
+                    flag = True
+                    break
+                elif answer.type=="keyword":
+                    print("<"+answer.lexeme[:-1]+","+str(answer.row)+","+str(answer.column)+">")
+                elif answer.type[-2:]=="op":
+                    print("<" + answer.type + "," + str(answer.row) + "," + str(answer.column) + ">")
+                elif answer.type=="string" or answer.type=="id" or answer.type[-3:]=="num":
+                    print("<" + answer.type + "," +answer.lexeme+","+ str(answer.row) + "," + str(answer.column) + ">")
 
-    def print_token(self, token):
-        if token.type == 'id':
-            print("<%s, %s, %d, %d>" % (token.type, token.lexeme, token.row, token.column));
-        else :
-            if token.type == 'keyword':
-                print("<%s, %d, %d>" % (token.lexeme, token.row, token.column));
-            else:
-                print("<%s, %d, %d>" % (token.type, token.row, token.column));
+            if flag:
+                break
+
 
     def identify_token(self):
         token = None
@@ -82,6 +99,8 @@ class LexicalAnalyzer(object):
             token = self.get_number()
         if not token:
             token = self.get_operator()
+        if not token:
+            token = self.get_string()
         if not token:
             self.current_line = ''
         return token
@@ -107,6 +126,10 @@ class LexicalAnalyzer(object):
             token = self.get_token(self.TOKEN_PRIORITY['OPERATOR'][op_type], OPERATOR[op_type])
             if token:
                 break
+        return token
+
+    def get_string(self):
+        token = self.get_token(self.TOKEN_PRIORITY['STRING'], STRING)
         return token
 
     def normalize_line(self, key_word):
