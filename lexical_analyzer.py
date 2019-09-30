@@ -27,17 +27,17 @@ class LexicalAnalyzer(object):
             'MOD' : r'^%',
             'PAR_LEFT': r'^\(',
             'PAR_RIGHT': r'^\)',
-            'PARC_LEFT': r'^\[',
-            'PARC_RIGHT': r'^\]',
+            'BRACKET_LEFT' : r'^\[',
+            'BRACKET_RIGTH' : r'^\]',
             'SEPARATE': r'^\[\]',
             'EJECT': r'^\-\>',
             'COMMA': r'^\,',
             'POINTCOMMA': r'^\;',
-            'POINT': r'^\.',
-
+            'DOT' : r'^\.'
         },
         'STRING': r"('.*?')|(\".*?\")"
     }
+
 
     def __str__(self):
         return 'SR language Lexical Analyzer'
@@ -88,6 +88,7 @@ class LexicalAnalyzer(object):
 
             if flag:
                 break
+
 
     def identify_token(self):
         token = None

@@ -22,13 +22,12 @@ OPERATOR = {
     'MOD' : 'mod_op',
     'PAR_LEFT' : 'par_left_op',
     'PAR_RIGHT' : 'par_right_op',
-    'PARC_LEFT': 'parc_left_op',
-    'PARC_RIGHT': 'parc_right_op',
+    'BRACKET_LEFT' : 'braqt_left_op',
+    'BRACKET_RIGTH' : 'braqt_right_op',
     'SEPARATE': 'separate_op',
     'EJECT': 'eject_op',
     'COMMA': 'comma_op',
     'POINTCOMMA': 'pointcomma_op',
-    'POINT': 'point_op',
-
+    'DOT': 'dot_op',
 }
 STRING='string'

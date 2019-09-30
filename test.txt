@@ -7,6 +7,7 @@ resource main()
    af
    # give each point capabilities for its neighbors
    fa i := 1 to N, j := 1 to N ->
+   !=$
      send pcap[i,j].compute(pcap[i,1:N], pcap[1:N,j])
    af
-end
+
