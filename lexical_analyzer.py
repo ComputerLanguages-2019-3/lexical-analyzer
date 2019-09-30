@@ -38,7 +38,6 @@ class LexicalAnalyzer(object):
         'STRING': r"('.*?')|(\".*?\")"
     }
 
-
     def __str__(self):
         return 'SR language Lexical Analyzer'
 
@@ -63,7 +62,7 @@ class LexicalAnalyzer(object):
         self.analyze_rows()
 
     def analyze_rows(self):
-        flag=False
+        lexical_error = False
         for number_line, line in enumerate(self.source_code, 1):
             self.current_column = 1
             self.current_row = number_line
@@ -73,22 +72,17 @@ class LexicalAnalyzer(object):
                 self.current_column += 1
             if self.current_line[0] == '#':
                 continue
+
             while self.current_line.strip():
-                answer=self.identify_token()
-                if answer==None:
+                answer = self.identify_token()
+                if not answer:
+                    lexical_error = True
                     print("Error léxico(linea:", self.current_row, "posicion:", self.current_column, ")")
-                    flag = True
                     break
-                elif answer.type=="keyword":
-                    print("<"+answer.lexeme[:-1]+","+str(answer.row)+","+str(answer.column)+">")
-                elif answer.type[-2:]=="op":
-                    print("<" + answer.type + "," + str(answer.row) + "," + str(answer.column) + ">")
-                elif answer.type=="string" or answer.type=="id" or answer.type[-3:]=="num":
-                    print("<" + answer.type + "," +answer.lexeme+","+ str(answer.row) + "," + str(answer.column) + ">")
-
-            if flag:
+                else:
+                    print(answer)
+            if lexical_error:
                 break
-
 
     def identify_token(self):
         token = None

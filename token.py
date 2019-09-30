@@ -1,11 +1,29 @@
+from settings import FILE_NAME, IDENTIFIER, KEY_WORD_TYPE, OPERATOR, NUMBER,STRING
+
+
 class Token(object):
     def __str__(self):
-        return 'Token {}, type {}, row {} and column {}'.format(
-            self.lexeme,
-            self.type,
-            self.row,
-            self.column
-        )
+        token_class = None
+        if self.type == KEY_WORD_TYPE:
+            token_class = '<{},{},{}>'.format(
+                self.lexeme[:-1],
+                self.row,
+                self.column
+            )
+        elif self.type[-2:] == 'op':
+            token_class = '<{},{},{}>'.format(
+                self.type,
+                self.row,
+                self.column
+            )
+        elif self.type == STRING or self.type == IDENTIFIER or self.type[-3:] == 'num':
+            token_class = '<{},{},{},{}>'.format(
+                self.type,
+                self.lexeme,
+                self.row,
+                self.column
+            )
+        return token_class
 
     def __init__(self, column, row, type, lexeme):
         self.column = column
