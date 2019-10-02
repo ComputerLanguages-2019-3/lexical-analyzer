@@ -6,7 +6,7 @@ class Token(object):
         token_class = None
         if self.type == KEY_WORD_TYPE:
             token_class = '<{},{},{}>'.format(
-                self.lexeme[:-1],
+                self.lexeme,
                 self.row,
                 self.column
             )

@@ -1,4 +1,4 @@
-FILE_NAME = 'test.txt'
+FILE_NAME = 'test_sign.txt'
 
 KEY_WORD_TYPE = 'keyword'
 IDENTIFIER = 'id'
