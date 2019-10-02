@@ -1,0 +1,11 @@
+# Comentario
+proc fill1dunsplb(a)
+	write ("1D array : unspecified range & w/o  / lb")
+	write (lb(a), ub(a))
+	write (lb(a, 1), ub(a, 1))
+	fa i := lb(a, 1) to ub(a, 1) ->
+		a[i] := i
+		writes(a[i], " ")
+	af
+	put("\n/")
+end fill1dunsplb

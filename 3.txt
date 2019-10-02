@@ -1,0 +1,7 @@
+# Cadenas no especificadas
+-809 3.0.0 -90.9999
+" "
+"Cadena & no vacía con \ símbolos $ raros    ^ y ñ Ñ "
+"Send 'kind' "
+"Cadena ¿¡ diferente # !?"
+"Era una cade...

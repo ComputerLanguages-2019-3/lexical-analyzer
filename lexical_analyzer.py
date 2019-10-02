@@ -7,9 +7,10 @@ class LexicalAnalyzer(object):
     TOKEN_PRIORITY = {
         'KEY_WORD':  r'^(global|resource|import|end|op|var|select|if|else|select|body|extend|create|destroy|null|noop|call|send|do|int|and|proc|receive|initial|when|abort|reply|fa|co|getarg|write|mod|stop|procedure|returns)\W',
         'IDENTIFIER': r'^([a-zA-Z]\w*)',
+        'COMMENT': '#',
         'NUM': {
-            'REAL': r'^-?(\d+\.{1}\d+)',
-            'INT': r'^-?(\d+)'
+            'REAL': r'^(\d+\.{1}\d+)',
+            'INT': r'^(\d+)'
         },
         'OPERATOR': {
             'INCREASE' : r'^\+\+',
@@ -29,7 +30,9 @@ class LexicalAnalyzer(object):
             'PAR_LEFT': r'^\(',
             'PAR_RIGHT': r'^\)',
             'SEPARATE': r'^\[\]',
-            'BRACKET_LEFT' : r'^\[',
+            'BRACE_LEFT' : r'^\{',
+            'BRACE_RIGHT': r'^\}',
+            'BRACKET_LEFT': r'^\[',
             'BRACKET_RIGTH' : r'^\]',
             'COMMA': r'^\,',
             'POINTCOMMA': r'^\;',
@@ -37,6 +40,7 @@ class LexicalAnalyzer(object):
         },
         'STRING': r"('.*?')|(\".*?\")"
     }
+
     def __str__(self):
         return 'SR language Lexical Analyzer'
 
@@ -68,9 +72,13 @@ class LexicalAnalyzer(object):
             self.current_column = 1
             self.current_row = number_line
             self.current_line = line
-            while self.current_line[0] == ' ':
-                self.current_line = self.current_line[1:]
-                self.current_column += 1
+            while self.current_line[0] == ' ' or self.current_line[0] == '\t' or self.current_line[0] == '\s':
+                if self.current_line[0] == '\t':
+                    self.current_column += 4
+                    self.current_line = self.current_line[3:]
+                elif self.current_line[0] == ' ' or self.current_line[0] == '\s':
+                    self.current_column += 1
+                    self.current_line = self.current_line[1:]
             if self.current_line[0] == '#':
                 continue
 
@@ -81,13 +89,17 @@ class LexicalAnalyzer(object):
                     print("Error léxico(linea:", self.current_row, "posicion:", self.current_column, ")")
                     break
                 else:
+                    if answer.type == 'COMMENT':
+                        break
                     print(answer)
             if lexical_error:
                 break
 
     def identify_token(self):
         token = None
-        token = self.get_key_word()
+        token = self.get_comment()
+        if not token:
+            token = self.get_key_word()
         if not token:
             token = self.get_identifiers()
         if not token:
@@ -115,8 +127,11 @@ class LexicalAnalyzer(object):
                 break
         return token
 
+    def get_comment(self):  # INFO: return class Token
+        token = self.get_token(self.TOKEN_PRIORITY['COMMENT'], 'COMMENT')
+        return token
+
     def get_operator(self):
-        # pass
         for op_type in self.TOKEN_PRIORITY['OPERATOR']:
             token = self.get_token(self.TOKEN_PRIORITY['OPERATOR'][op_type], OPERATOR[op_type])
             if token:
@@ -130,6 +145,9 @@ class LexicalAnalyzer(object):
     def normalize_line(self, key_word):
         self.current_line = self.current_line.lstrip(key_word)
         blank_space_num = len(self.current_line) - len(self.current_line.lstrip(' '))
+        if re.match(r'\t', self.current_line):
+            self.current_line = self.current_line.lstrip('\t')
+            blank_space_num += 4
         self.current_column += blank_space_num
         self.current_line = self.current_line.lstrip(' ')
 

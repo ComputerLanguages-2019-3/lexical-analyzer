@@ -1,0 +1,12 @@
+proc # Comentario comentario
+
+ # Algunas palabras reservadas
+op fa receive destroy
+body write final process
+send getarg char global
+import create destroy reply
+next fi op ni co cap
+
+# Tipos de dato
+char string int bool
+

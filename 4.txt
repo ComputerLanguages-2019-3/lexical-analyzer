@@ -1,0 +1,147 @@
+# test swapping of arrays
+
+resource aswap ()
+
+    var c := chars ("abcde")
+    var d := chars ("zyxwv")
+    write (c, d)
+    c :=: d
+    write (c, d)
+    d :=: c
+    write (c, d)
+    write (c :=: d)
+
+    procedure adump (x[*,*]:int)
+	fa i:= 1 to ub(x) ->
+	    fa j := 1 to ub(x,2) ->
+		writes (x[i,j], " ")
+	af af
+	write ()
+    end
+
+    var a := ((11,13,17,1.9,23), (29,31,37,41,43), (47,53,59,61,67))
+    var b := ((11,31,71,91,32), (92,13,7.3,14,34), (74,35,9.5,16,76))
+    adump (a)
+    adump (b)
+    write()
+
+    a :=: b
+    adump (a)
+    adump (b)
+    write()
+
+    adump (b :=: a)
+    adump (b :=: a)
+    write()
+end
+
+resource do8()
+	var a,b,c:int
+	a := 1
+	b := -2
+	c := 0
+	write(a); write(b); write(c)
+	do a != 10 ->
+		b := a
+		do b != 10 ->
+			c++
+			b++
+			write(a); write(b); write(c)
+		od
+		a++
+		write(a); write(b); write(c)
+	od
+	a :=: c
+	write(a); write(b); write(c)
+end
+
+# boolean arrays, records & operation
+resource bool3()
+	op b() returns x: bool
+
+	var x[1:4] : bool
+	var bb : bool := true
+	var c[false:true]:bool
+	type t = rec( a,b:bool )
+
+	fa i := lb(x) to ub(x) ->
+		x[i] := i % 2 = 0
+	af
+	fa i := lb(x) to ub(x) ->
+		write(x[i])
+	af
+	write(b())
+	write(b())
+	write(b())
+	write(b())
+
+	proc b() returns x
+		x := bb
+	end
+end
+
+#  test string expressions and substrings
+
+resource expr()
+
+    var c5 [1:5] : char
+    var c7 [1:7] : char
+    var s1, s2, s3 : string[10]
+
+    s1 := "alpha"
+    s2 := "epsilon"		# string const assigned to string
+    s3 := s1			# string assignment
+    c5 := chars(s1)		# string var assigned to char var
+    c7 := chars("upsilon")	# string const assigned to char var
+    write(c5,c7,s1,s2,s3)
+    s1 :=: s2			# string swap
+    write(s1,s2)
+    s1 := string(c5)		# char var assigned to string
+    s2 := string(c7)
+    s3 := "*"
+    write(s1,s2,s3)
+    s1 := "123"
+    s2 := "45"
+    s1 := "rotorooter"
+    c5 := chars(s1[1:5])	# substring reference
+    c7 := chars(s1[3:9])
+    s1[2:7] := "espira"		# substring assignment
+    s1[9] := char(111)		# substring gets char expression
+    write(c5,c7,s1)
+end
+
+# tests empty statement lists, etc.
+# no output.
+resource n0
+body n0() separate
+resource n1()
+	op p()
+	op q()
+	proc p()
+	end
+	proc q()
+		var a : int := 1
+		var b : int := 2
+		if a < b ->
+		[] a = b ->
+		[] a > b ->
+			do a > 0 ->
+				a--
+			[] a = 111 ->
+			od
+		fi
+		if a = 77 ->
+			if b = 88 ->
+				var c : char
+			[] b = 999 ->
+			[] else ->
+			fi
+		fi
+	end
+
+
+	final
+	end
+end
+body n0
+end
