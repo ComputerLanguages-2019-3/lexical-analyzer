@@ -32,4 +32,4 @@ OPERATOR = {
     'POINTCOMMA': 'pointcomma_op',
     'DOT': 'dot_op',
 }
-STRING='string'
+STRING = 'string'
