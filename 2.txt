@@ -1,0 +1,10 @@
+# Símbolos
+, ; : .
+:=  ->  +  -  :=:  /  * /+  ...  %
+<  >  =  []
+{ }  [ ]  ( )
+
+# Identificadores
+variable VARIABLE Variable
+fan 
+var0 Next Next3 ident¿
