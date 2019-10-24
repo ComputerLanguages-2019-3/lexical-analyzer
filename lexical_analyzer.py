@@ -1,5 +1,8 @@
 import re
-from settings import FILE_NAME, IDENTIFIER, KEY_WORD_TYPE, OPERATOR, NUMBER,STRING
+
+from grammar_generate import GrammarGenerator
+from settings import FILE_NAME, IDENTIFIER, KEY_WORD_TYPE, OPERATOR, NUMBER, STRING, GRAMMAR_FILE
+from sintax_analyzer import SyntaxAnalyzer
 from token_lex import Token
 
 
@@ -49,8 +52,16 @@ class LexicalAnalyzer(object):
         self.current_column = 1
         self.current_row = 1
         self.current_line = ''
+        self.token_list = None
 
     def get_token(self, token_regex, token_type, delete_from_regex=False):
+        """
+
+        :param token_regex:
+        :param token_type:
+        :param delete_from_regex:
+        :return:
+        """
         token = None
         key_word_matched = re.match(token_regex, self.current_line)
         if key_word_matched:
@@ -63,8 +74,11 @@ class LexicalAnalyzer(object):
         return token
 
     def analyze_source_code(self):
-        self.source_code = open(FILE_NAME, 'r', encoding="utf-8")
-        self.analyze_rows()
+        self.source_code = (line for line in open(FILE_NAME, 'r', encoding="utf-8"))
+        self.token_list = self.analyze_rows()
+
+    def get_next_token(self):
+        return next(self.token_list)
 
     def analyze_rows(self):
         lexical_error = False
@@ -83,7 +97,7 @@ class LexicalAnalyzer(object):
                 else:
                     if answer.type == 'COMMENT':
                         break
-                    print(answer)
+                    yield answer
             if lexical_error:
                 break
 
@@ -145,4 +159,11 @@ class LexicalAnalyzer(object):
 
 
 if __name__ == '__main__':
-    LexicalAnalyzer().analyze_source_code()
+    lexical = LexicalAnalyzer()
+    syntactic = SyntaxAnalyzer(lexical)
+    lexical.analyze_source_code()
+    grammar_gen = GrammarGenerator()
+    grammar_gen.run(file_name=GRAMMAR_FILE)
+    print(grammar_gen.get_prediction_set())
+
+
