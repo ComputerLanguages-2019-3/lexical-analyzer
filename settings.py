@@ -1,4 +1,6 @@
-FILE_NAME = '2.txt'
+FILE_NAME = 'files/0.txt'
+
+GRAMMAR_FILE = 'files/grammar_def.txt'
 
 KEY_WORD_TYPE = 'keyword'
 IDENTIFIER = 'id'
