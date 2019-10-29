@@ -164,8 +164,6 @@ if __name__ == '__main__':
     lexical.analyze_source_code()
     grammar_gen = GrammarGenerator()
     grammar_gen.run(file_name=GRAMMAR_FILE)
-    print(grammar_gen.get_prediction_set())
-    print(grammar_gen.next_set("A", set({})))
-    print(grammar_gen.next_set("B", set({})))
-    print(grammar_gen.next_set("C", set({})))
-
+    grammar_gen.get_prediction_set()
+    grammar_gen.get_all_next_sets()
+    print(grammar_gen.next_sets_by_no_terminal)

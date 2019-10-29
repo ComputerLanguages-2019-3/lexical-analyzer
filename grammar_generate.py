@@ -11,6 +11,7 @@ class GrammarGenerator(object):
     def __init__(self):
         self.beta_next_by_no_terminal = {}
         self.first_sets_by_no_terminal = {}
+        self.next_sets_by_no_terminal = {}
 
     def run(self, file_name):
         self.file_name = file_name
@@ -35,6 +36,10 @@ class GrammarGenerator(object):
                 no_terminal_first.update(self.first_set(alpha, set({})))
             self.first_sets_by_no_terminal[no_terminal] = no_terminal_first
         print(self.first_sets_by_no_terminal)
+
+    def get_all_next_sets(self):
+        for no_terminal in self.grammar_map.keys():
+            self.next_sets_by_no_terminal[no_terminal] = self.next_set(no_terminal, set({}))
 
     def load_beta_next(self):
         for no_terminal in self.grammar_map.keys():
@@ -65,13 +70,9 @@ class GrammarGenerator(object):
                 no_terminal_next_set.add(beta[0])
             else:
                 if epsilon in self.first_sets_by_no_terminal[beta[0]]:
-                    no_terminal_next_set.update(
-                        self.next_set(beta_from, set({}))
-                    )
+                    no_terminal_next_set.update(self.next_set(beta_from, set({})))
                 else:
-                    no_terminal_next_set.update(
-                        self.first_sets_by_no_terminal[beta[0]]
-                    )
+                    no_terminal_next_set.update(self.first_sets_by_no_terminal[beta[0]])
         return no_terminal_next_set
 
     # return alpha_first       #set
