@@ -63,6 +63,6 @@ OPERATOR = {
 
     'LBRACE':'tk_lbrace' ,
     'RBRACE':'tk_rbrace' ,
-    'SEPARATOR':'tk_separator',
+    'SEPARATOR':'tk_separator'
 }
 STRING = 'string'

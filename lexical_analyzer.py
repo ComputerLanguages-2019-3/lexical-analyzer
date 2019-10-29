@@ -20,11 +20,11 @@ class LexicalAnalyzer(object):
             'RPAREN': r'^\)',
             'LBRACKET': r'^\[',
             'RBRACKET': r'^]',
-            'PERIOD': r'^.',
+            'PERIOD': r'^\.',
 
             'NOT': r'^~',
             'ADDR': r'^@',
-            'QMARK': r'^\   ?',
+            'QMARK': r'^\?',
             'INCR': r'^\+\+',
             'DEC': r'^--',
             'HAT': r'^\^',
@@ -70,7 +70,7 @@ class LexicalAnalyzer(object):
 
             'LBRACE': r'^\{',
             'RBRACE': r'^\}',
-            'SEPARATOR': r'^\;',
+            'SEPARATOR': r'^\;'
         },
         'STRING': r"('.*?')|(\".*?\")"
     }
