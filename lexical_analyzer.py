@@ -16,30 +16,61 @@ class LexicalAnalyzer(object):
             'INT': r'^(\d+)'
         },
         'OPERATOR': {
-            'INCREASE' : r'^\+\+',
-            'ADD': r'^\+',
-            'DECREASE': r'^--',
-            'EJECT': r'^\-\>',
-            'SUB': r'^-',
-            'MUL': r'^\*',
+            'LPAREN': r'^\(',
+            'RPAREN': r'^\)',
+            'LBRACKET': r'^\[',
+            'RBRACKET': r'^]',
+            'PERIOD': r'^.',
+
+            'NOT': r'^~',
+            'ADDR': r'^@',
+            'QMARK': r'^\   ?',
+            'INCR': r'^\+\+',
+            'DEC': r'^--',
+            'HAT': r'^\^',
+
+            'LE': r'^<=',
+            'LT': r'^<',
+            'EQ': r'^=',
+            'GT': r'^>',
+            'NE': r'^(!=|~=)',
+
+            'PLUS': r'^\+',
+            'MINUS': r'^-',
+            'ASTER': r'^\*',
             'DIV': r'^/',
+            'REMDR': r'^%',
+            'EXPON': r'^**',
+            'AND' : r'^&',
+            'OR' : r'^\|',
+            'LSHIFT': r'^<<',
+            'RSHIFT': r'^>>',
+            'CONCAT': r'^\||',
+
+            'AUG_PLUS': r'^\+:=',
+            'AUG_MINUS': r'^-:=',
+            'AUG_ASTER': r'^*:=',
+            'AUG_DIV': r'^/:=',
+            'AUG_MOD': r'^%:=',
+            'AUG_EXPON': r'^**:=',
+            'AUG_AND' : r'^&:=',
+            'AUG_OR' : r'^\|:=',
+            'AUG_LSHIFT': r'^<<:=',
+            'AUG_RSHIFT': r'^>>:=',
+            'AUG_CONCAT': r'^\||:=',
+
             'ASSIGN': r'^:=',
-            'DEFINE': r'^:',
-            'GREATER': r'^>',
-            'LOWER': r'^<',
-            'DIFFERENT': r'^\!\=',
-            'EQUAL': r'\=',
-            'MOD': r'^%',
-            'PAR_LEFT': r'^\(',
-            'PAR_RIGHT': r'^\)',
-            'SEPARATE': r'^\[\]',
-            'BRACE_LEFT': r'^\{',
-            'BRACE_RIGHT': r'^\}',
-            'BRACKET_LEFT': r'^\[',
-            'BRACKET_RIGTH': r'^\]',
+            'SWAP' : r'^:=:',
+
             'COMMA': r'^\,',
-            'POINTCOMMA': r'^\;',
-            'DOT': r'^\.'
+            'COLON': r'^:',
+            'ARROW': r'^->',
+            'SQUARE': r'^\[]',
+            'PARALLEL': r'^//',
+
+            'LBRACE': r'^\{',
+            'RBRACE': r'^\}',
+            'SEPARATOR': r'^\;',
         },
         'STRING': r"('.*?')|(\".*?\")"
     }
@@ -162,8 +193,21 @@ if __name__ == '__main__':
     lexical = LexicalAnalyzer()
     syntactic = SyntaxAnalyzer(lexical)
     lexical.analyze_source_code()
-    grammar_gen = GrammarGenerator()
-    grammar_gen.run(file_name=GRAMMAR_FILE)
-    print(grammar_gen.get_prediction_set())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
+    print(lexical.get_next_token())
 
-
+    #grammar_gen = GrammarGenerator()
+    #grammar_gen.run(file_name=GRAMMAR_FILE)
+    #print(grammar_gen.get_prediction_set())
