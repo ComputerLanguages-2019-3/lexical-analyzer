@@ -12,6 +12,7 @@ class GrammarGenerator(object):
         self.beta_next_by_no_terminal = {}
         self.first_sets_by_no_terminal = {}
         self.next_sets_by_no_terminal = {}
+        self.prediction_sets = {}
 
     def run(self, file_name):
         self.file_name = file_name
@@ -29,7 +30,19 @@ class GrammarGenerator(object):
             alpha = rule.strip(' ').strip('\n').split(' ')
             self.grammar_map[no_terminal].append(alpha)
 
-    def get_prediction_set(self):
+    def get_prediction_sets(self):
+        for no_terminal in self.grammar_map.keys():
+            self.prediction_sets[no_terminal] = []
+            for rule_number, rule in enumerate(self.grammar_map[no_terminal]):
+                rule_first_set = self.first_set(rule, set({}))
+                if epsilon in rule_first_set:
+                    rule_first_set.remove(epsilon)
+                    rule_first_set.update(self.next_sets_by_no_terminal[no_terminal])
+                    self.prediction_sets[no_terminal].append(rule_first_set)
+                else:
+                    self.prediction_sets[no_terminal].append(rule_first_set)
+
+    def get_all_first_sets(self):
         for no_terminal in self.grammar_map.keys():
             no_terminal_first = set({})
             for alpha in self.grammar_map[no_terminal]:
