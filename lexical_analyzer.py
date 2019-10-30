@@ -112,6 +112,7 @@ class LexicalAnalyzer(object):
         self.source_code = (line for line in open(FILE_NAME, 'r', encoding="utf-8"))
         self.token_list = self.analyze_rows()
 
+
     def get_next_token(self):
         return next(self.token_list)
 
@@ -135,6 +136,7 @@ class LexicalAnalyzer(object):
                     yield answer
             if lexical_error:
                 break
+        yield Token(column=0, row=number_line + 1, type='tk_eof', lexeme='$')
 
     def identify_token(self):
         token = None
@@ -198,11 +200,10 @@ if __name__ == '__main__':
     lexical = LexicalAnalyzer()
     grammar_gen = GrammarGenerator()
     grammar_gen.run(file_name=GRAMMAR_FILE)
-    grammar_gen.get_all_first_sets()
+    #grammar_gen.get_all_first_sets()
     grammar_gen.get_all_next_sets()
-    grammar_gen.get_prediction_sets()
+    print("prediction")
+    print(grammar_gen.get_prediction_sets())
     lexical.analyze_source_code()
     syntactic = SyntaxAnalyzer(lexical, grammar_gen)
-    for token in lexical.token_list:
-        print(token)
     syntactic.main_analysis()
