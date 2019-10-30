@@ -62,7 +62,7 @@ class GrammarGenerator(object):
                 left_no_terminal, rules = line.split(':')
                 rules = rules.split(',')
                 for rule in rules:
-                    no_terminal_match = re.search(no_terminal, rule)
+                    no_terminal_match = re.search("\\b" + no_terminal + "\\b", rule)
                     if no_terminal_match:
                         match_idx = no_terminal_match.start(0)
                         beta_next = rule[match_idx + len(no_terminal) + 1:].strip('\n').strip(' ')
@@ -77,10 +77,9 @@ class GrammarGenerator(object):
         for no_terminal_next in self.beta_next_by_no_terminal[no_terminal]:
             beta_from = no_terminal_next[0]
             beta = no_terminal_next[1].split(' ')
+            print(beta)
             if not beta[0]:
-                print(beta_from)
-                no_terminal_next_set.update(self.next_set(beta_from, set({})))
-                return no_terminal_next_set
+                no_terminal_next_set.update(self.next_set(beta_from, set({})))  # recursion problem
             elif terminal_rgx.match(beta[0]):
                 no_terminal_next_set.add(beta[0])
             else:
@@ -88,8 +87,59 @@ class GrammarGenerator(object):
                     no_terminal_next_set.update(self.next_set(beta_from, set({})))
                 else:
                     no_terminal_next_set.update(self.first_sets_by_no_terminal[beta[0]])
-                return no_terminal_next_set
         return no_terminal_next_set
+
+    def next_set_iterative(self):
+        terminal_rgx = re.compile('[a-z]')
+        no_terminal_rgx = re.compile('[A-Z]')
+        beta_from_set = set({'$'})
+        no_terminal_next_set = set({})
+        stack_no_terminals = list(self.grammar_map.keys())
+        for no_terminal in stack_no_terminals:
+            self.next_sets_by_no_terminal[no_terminal] = set({})
+
+        num_no_terminals = len(stack_no_terminals)
+        no_terminal = stack_no_terminals.pop(0)
+        stack_no_terminal_rules = [[no_terminal, no_terminal_r] for no_terminal_r in self.beta_next_by_no_terminal[no_terminal]]
+        stack_beta_next = []
+        init_no_ter = True
+        while stack_no_terminal_rules or init_no_ter:
+            init_no_ter = False
+            get_beta_next = False
+            no_terminal_next_set = set({})
+            if no_terminal == starting_char:
+                no_terminal_next_set.add(file_final)
+            if stack_no_terminal_rules:
+                no_terminal, no_terminal_rule = stack_no_terminal_rules.pop()
+                beta_from = no_terminal_rule[0]
+                beta = no_terminal_rule[1].split(' ')
+                beta_first_set = self.first_set(beta, set({}))
+
+                if epsilon in beta_first_set:
+                    get_beta_next = True
+                    beta_first_set.remove(epsilon)
+
+                if '' in beta_first_set:
+                    get_beta_next = True
+                    beta_first_set.remove('')
+
+                if not beta_first_set:
+                    get_beta_next = True
+
+                no_terminal_next_set.update(beta_first_set)
+                self.next_sets_by_no_terminal[no_terminal].update(no_terminal_next_set)
+
+                if get_beta_next:
+                    if self.next_sets_by_no_terminal[beta_from]:
+                        self.next_sets_by_no_terminal[no_terminal].update(self.next_sets_by_no_terminal[beta_from])
+                    stack_no_terminal_rules = stack_no_terminal_rules + [[no_terminal, no_terminal_r] for no_terminal_r in self.beta_next_by_no_terminal[beta_from]]
+                    continue
+
+            if not stack_no_terminal_rules and stack_no_terminals:
+                no_terminal = stack_no_terminals.pop()
+                stack_no_terminal_rules = [[no_terminal, no_terminal_r] for no_terminal_r in self.beta_next_by_no_terminal[no_terminal]]
+            num_no_terminals = len(stack_no_terminals)
+        print('next', self.next_sets_by_no_terminal)
 
     # return alpha_first       #set
     def first_set(self, alpha, alpha_first):

@@ -1,3 +1,3 @@
-A: B C, ant A all prueba
-B: big C, bus A boss,  ***
-C: cat, cow
+A: B
+B: cat A, all C
+C: bus B, €

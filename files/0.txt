@@ -1,1 +1,1 @@
-resource main(;
+resource main
