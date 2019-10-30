@@ -40,27 +40,27 @@ class LexicalAnalyzer(object):
             'ASTER': r'^\*',
             'DIV': r'^/',
             'REMDR': r'^%',
-            'EXPON': r'^**',
-            'AND' : r'^&',
-            'OR' : r'^\|',
+            'EXPON': r'^\*\*',
+            'AND': r'^&',
+            'OR': r'^\|',
             'LSHIFT': r'^<<',
             'RSHIFT': r'^>>',
-            'CONCAT': r'^\||',
+            'CONCAT': r'^\|\|',
 
             'AUG_PLUS': r'^\+:=',
             'AUG_MINUS': r'^-:=',
-            'AUG_ASTER': r'^*:=',
+            'AUG_ASTER': r'^\*:=',
             'AUG_DIV': r'^/:=',
             'AUG_MOD': r'^%:=',
-            'AUG_EXPON': r'^**:=',
-            'AUG_AND' : r'^&:=',
-            'AUG_OR' : r'^\|:=',
+            'AUG_EXPON': r'^\*\*:=',
+            'AUG_AND': r'^&:=',
+            'AUG_OR': r'^\|:=',
             'AUG_LSHIFT': r'^<<:=',
             'AUG_RSHIFT': r'^>>:=',
-            'AUG_CONCAT': r'^\||:=',
+            'AUG_CONCAT': r'^\|\|:=',
 
             'ASSIGN': r'^:=',
-            'SWAP' : r'^:=:',
+            'SWAP': r'^:=:',
 
             'COMMA': r'^\,',
             'COLON': r'^:',
@@ -71,6 +71,7 @@ class LexicalAnalyzer(object):
             'LBRACE': r'^\{',
             'RBRACE': r'^\}',
             'SEPARATOR': r'^\;'
+
         },
         'STRING': r"('.*?')|(\".*?\")"
     }
@@ -87,7 +88,6 @@ class LexicalAnalyzer(object):
 
     def get_token(self, token_regex, token_type, delete_from_regex=False):
         """
-
         :param token_regex:
         :param token_type:
         :param delete_from_regex:
@@ -100,6 +100,10 @@ class LexicalAnalyzer(object):
             if delete_from_regex:
                 key_word = re.sub(r'\W', '', key_word)
             token = Token(column=self.current_column, row=self.current_row, type=token_type, lexeme=key_word)
+            if token.type == "keyword":
+                token.type = "tk_" + key_word
+            if token.type == "id":
+                token.type = "tk_id"
             self.current_column += len(key_word)
             self.normalize_line(key_word)
         return token
@@ -150,6 +154,7 @@ class LexicalAnalyzer(object):
         return token
 
     def get_key_word(self):  # INFO: return class Token
+        print
         token = self.get_token(self.TOKEN_PRIORITY['KEY_WORD'], KEY_WORD_TYPE, delete_from_regex=True)
         return token
 
@@ -191,23 +196,13 @@ class LexicalAnalyzer(object):
 
 if __name__ == '__main__':
     lexical = LexicalAnalyzer()
-    syntactic = SyntaxAnalyzer(lexical)
+    grammar_gen = GrammarGenerator()
+    grammar_gen.run(file_name=GRAMMAR_FILE)
+    grammar_gen.get_all_first_sets()
+    grammar_gen.get_all_next_sets()
+    grammar_gen.get_prediction_sets()
     lexical.analyze_source_code()
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-    print(lexical.get_next_token())
-
-    #grammar_gen = GrammarGenerator()
-    #grammar_gen.run(file_name=GRAMMAR_FILE)
-    #print(grammar_gen.get_prediction_set())
+    syntactic = SyntaxAnalyzer(lexical, grammar_gen)
+    for token in lexical.token_list:
+        print(token)
+    syntactic.main_analysis()

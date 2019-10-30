@@ -1,6 +1,6 @@
 FILE_NAME = 'files/0.txt'
 
-GRAMMAR_FILE = 'files/grammar_def.txt'
+GRAMMAR_FILE = 'files/sr_grammar.txt'
 
 KEY_WORD_TYPE = 'keyword'
 IDENTIFIER = 'id'
@@ -28,11 +28,11 @@ OPERATOR = {
     'GT': 'tk_gt',
     'NE': 'tk_ne',
 
-    'PLUS' : 'tk_plus',
-    'MINUS' : 'tk_minus',
-    'ASTER' : 'tk_aster',
-    'DIV' : 'tk_div',
-    'REMDR' : 'tk_remdr',
+    'PLUS': 'tk_plus',
+    'MINUS': 'tk_minus',
+    'ASTER': 'tk_aster',
+    'DIV': 'tk_div',
+    'REMDR': 'tk_remdr',
     'EXPON': 'tk_expon',
     'AND': 'tk_and',
     'OR': 'tk_or',
@@ -46,23 +46,23 @@ OPERATOR = {
     'AUG_DIV': 'tk_aug_div',
     'AUG_MOD': 'tk_aug_mod',
     'AUG_EXPON': 'tk_aug_expon',
-    'AUG_AND' : 'tk_aug_and',
-    'AUG_OR' : 'tk_aug_or',
+    'AUG_AND': 'tk_aug_and',
+    'AUG_OR': 'tk_aug_or',
     'AUG_LSHIFT': 'tk_aug_lshift',
     'AUG_RSHIFT': 'tk_aug_rshift',
     'AUG_CONCAT': 'tk_aug_concat',
 
-    'TK_ASSIGN': 'tk_assign',
-    'TK_SWAP' : 'tk_swap',
+    'ASSIGN': 'tk_assign',
+    'SWAP': 'tk_swap',
 
-    'TK_COMMA': 'tk_comma',
-    'TK_COLON': 'tk_colon',
-    'TK_ARROW': 'tk_arrow',
-    'TK_SQUARE': 'tk_square',
-    'TK_PARALLEL': 'tk_parallel',
+    'COMMA': 'tk_comma',
+    'COLON': 'tk_colon',
+    'ARROW': 'tk_arrow',
+    'SQUARE': 'tk_square',
+    'PARALLEL': 'tk_parallel',
 
-    'LBRACE':'tk_lbrace' ,
-    'RBRACE':'tk_rbrace' ,
-    'SEPARATOR':'tk_separator'
+    'LBRACE': 'tk_lbrace',
+    'RBRACE': 'tk_rbrace',
+    'SEPARATOR': 'tk_separator'
 }
 STRING = 'string'
