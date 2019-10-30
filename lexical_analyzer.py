@@ -192,16 +192,11 @@ class LexicalAnalyzer(object):
 
 if __name__ == '__main__':
     lexical = LexicalAnalyzer()
-    syntactic = SyntaxAnalyzer(lexical)
-    lexical.analyze_source_code()
-    for token in lexical.token_list:
-        print(token)
     grammar_gen = GrammarGenerator()
     grammar_gen.run(file_name=GRAMMAR_FILE)
     grammar_gen.get_all_first_sets()
     grammar_gen.get_all_next_sets()
-    print(grammar_gen.next_sets_by_no_terminal)
-    print(grammar_gen.grammar_map)
-    print(grammar_gen.first_set(["B", "C"], set({}) ))
     grammar_gen.get_prediction_sets()
-    print(grammar_gen.prediction_sets)
+    lexical.analyze_source_code()
+    syntactic = SyntaxAnalyzer(lexical, grammar_gen)
+    syntactic.main_analysis()

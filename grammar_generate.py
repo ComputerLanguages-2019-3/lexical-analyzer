@@ -1,7 +1,7 @@
 import re
 
-epsilon = '***'
-starting_char = 'A'
+epsilon = '€'
+starting_char = 'COMPONENT'
 file_final = '$'
 
 
@@ -65,7 +65,7 @@ class GrammarGenerator(object):
                     no_terminal_match = re.search(no_terminal, rule)
                     if no_terminal_match:
                         match_idx = no_terminal_match.start(0)
-                        beta_next = rule[match_idx+1:].strip('\n').strip(' ')
+                        beta_next = rule[match_idx + len(no_terminal) + 1:].strip('\n').strip(' ')
                         self.beta_next_by_no_terminal[no_terminal].append([left_no_terminal, beta_next])
         print(self.beta_next_by_no_terminal)
 
@@ -100,6 +100,7 @@ class GrammarGenerator(object):
             elif no_terminal_rgx.match(alpha_i):
                 alpha_i_first = set({})
                 for alpha_aux in self.grammar_map[alpha_i]:
+                    #print(alpha_i)
                     alpha_aux_first = self.first_set(alpha_aux, set({}))
                     if epsilon in alpha_aux_first:
                         alpha_aux_first.remove(epsilon)
