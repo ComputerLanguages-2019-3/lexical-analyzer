@@ -12,19 +12,22 @@ class SyntaxAnalyzer(object):
         self.current_token = None
 
     def recursive_desc_syntax_analysis(self, no_ter):
+        token_in_pred = False
         for rule_idx, pred_rule in enumerate(self.grammar.prediction_sets[no_ter]):
-            if self.current_token.lexeme in pred_rule:
+            if self.current_token.type in pred_rule:
+                token_in_pred = True
                 rule = self.grammar.grammar_map[no_ter][rule_idx]
                 for rule_char in rule:
                     if self.terminal_rgx.match(rule_char):
                         self.call_match(rule_char)
                     elif self.no_terminal_rgx.match(rule_char):
                         self.recursive_desc_syntax_analysis(rule_char)
-            else:
-                print('Error sintáctico!!!')
+                break
+        if not token_in_pred:
+            print('Error sintáctico!!!', self.grammar.prediction_sets[no_ter])
 
     def call_match(self, expected_token):
-        if self.current_token.lexeme == expected_token:
+        if self.current_token.type == expected_token:
             self.current_token = self.lexical.get_next_token()
         else:
             print('Error sintaácticooo ', expected_token)
@@ -32,4 +35,5 @@ class SyntaxAnalyzer(object):
     def main_analysis(self):
         self.current_token = self.lexical.get_next_token()
         self.recursive_desc_syntax_analysis(self.init_char_grammar)
-        print(self.current_token)
+        if not self.current_token.type == 'tk_eof':
+            print('Error sintáctico', 'Se esperaba tal')

@@ -101,6 +101,10 @@ class LexicalAnalyzer(object):
             if delete_from_regex:
                 key_word = re.sub(r'\W', '', key_word)
             token = Token(column=self.current_column, row=self.current_row, type=token_type, lexeme=key_word)
+            if token.type == "keyword":
+                token.type = "tk_" + key_word
+            if token.type == "id":
+                token.type = "tk_id"
             self.current_column += len(key_word)
             self.normalize_line(key_word)
         return token
@@ -108,6 +112,7 @@ class LexicalAnalyzer(object):
     def analyze_source_code(self):
         self.source_code = (line for line in open(FILE_NAME, 'r', encoding="utf-8"))
         self.token_list = self.analyze_rows()
+
 
     def get_next_token(self):
         return next(self.token_list)
@@ -132,6 +137,7 @@ class LexicalAnalyzer(object):
                     yield answer
             if lexical_error:
                 break
+        yield Token(column=0, row=number_line + 1, type='tk_eof', lexeme='$')
 
     def identify_token(self):
         token = None

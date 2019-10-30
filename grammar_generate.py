@@ -78,7 +78,9 @@ class GrammarGenerator(object):
             beta_from = no_terminal_next[0]
             beta = no_terminal_next[1].split(' ')
             if not beta[0]:
+                print(beta_from)
                 no_terminal_next_set.update(self.next_set(beta_from, set({})))
+                return no_terminal_next_set
             elif terminal_rgx.match(beta[0]):
                 no_terminal_next_set.add(beta[0])
             else:
@@ -86,6 +88,7 @@ class GrammarGenerator(object):
                     no_terminal_next_set.update(self.next_set(beta_from, set({})))
                 else:
                     no_terminal_next_set.update(self.first_sets_by_no_terminal[beta[0]])
+                return no_terminal_next_set
         return no_terminal_next_set
 
     # return alpha_first       #set
@@ -100,7 +103,6 @@ class GrammarGenerator(object):
             elif no_terminal_rgx.match(alpha_i):
                 alpha_i_first = set({})
                 for alpha_aux in self.grammar_map[alpha_i]:
-                    #print(alpha_i)
                     alpha_aux_first = self.first_set(alpha_aux, set({}))
                     if epsilon in alpha_aux_first:
                         alpha_aux_first.remove(epsilon)
@@ -108,6 +110,7 @@ class GrammarGenerator(object):
                          alpha_aux_first
                     )
                 alpha_first.update(alpha_i_first.remove(epsilon) if epsilon in alpha_i_first else alpha_i_first)
+                return alpha_first
             elif epsilon in self.first_set(alpha_i, set({})):
                 if len(self.first_set(alpha_i, set({}))) == 1:
                     alpha_first.add(epsilon)
